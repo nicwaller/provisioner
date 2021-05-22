@@ -1,0 +1,12 @@
+.kitchen/
+.kitchen.local.yml
+.idea/*
+.bundle/
+vendor/
+*.tfstate
+ssh_keys/*
+!ssh_keys/README.md
+.terraform
+terraform.tfstate*
+id_ed25519*
+id_rsa*

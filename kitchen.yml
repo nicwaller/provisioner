@@ -1,0 +1,26 @@
+---
+driver:
+  name: ec2
+  aws_ssh_key_id: "test-kitchen" # managed by configure.sh
+  security_group_ids: [ "sg-012255f4fe60e5ac8" ] # managed by configure.sh
+  region: us-west-2
+  subnet_id: "subnet-09b7b37a4b506a13e" # managed by configure.sh
+  instance_type: t3.nano
+  associate_public_ip: true
+  interface: public
+
+transport:
+  ssh_key: id_rsa
+  username: ubuntu
+
+provisioner:
+  name: shell
+
+platforms:
+  - name: ubuntu-20.04
+
+verifier:
+  name: inspec
+
+suites:
+  - name: default
