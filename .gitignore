@@ -1,5 +1,5 @@
 .idea/*
 .pytest_cache
-provisioner/dist/*.pyz
+*.pyz
 venv
 .DS_Store

@@ -17,19 +17,16 @@ class File(BaseImperator):
 
     def __init__(self, key: str, declaration: Dict):
         super().__init__(key, declaration)
-        self.source: str = declaration["source"]
-        self.mode: str = declaration["mode"]
-        self.owner: str = declaration["owner"]
-        self.group: str = declaration["group"]
-        try:
-            self.conflict: str = declaration["conflict"]
-        except KeyError:
-            self.conflict: str = "backup"
-        try:
-            self.action: str = declaration["action"]
-        except KeyError:
-            self.action: str = "create"
-        # TODO: I need a way to delete index.html so that index.php can shine through
+        self.action: str = declaration["action"]
+        if self.action == "create":
+            self.source: str = declaration["source"]
+            self.mode: str = declaration["mode"]
+            self.owner: str = declaration["owner"]
+            self.group: str = declaration["group"]
+            try:
+                self.conflict: str = declaration["conflict"]
+            except KeyError:
+                self.conflict: str = "backup"
 
     def apply(self):
         # Be careful about avoiding temporary race conditions... use hard linking to move into place? Does move preserve permissions?

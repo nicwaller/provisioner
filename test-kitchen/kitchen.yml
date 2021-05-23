@@ -13,11 +13,23 @@ transport:
   ssh_key: id_rsa
   username: ubuntu
 
+lifecycle:
+  post_create:
+    - remote: |
+        sudo apt-get -y update
+        sudo apt-get -y install ruby
+  pre_converge:
+    - local: |
+        set -x
+        mkdir stage
+        (cd ../provisioner && rm dist/provisioner.pyz && make dist/provisioner.pyz)
+        cp ../provisioner/dist/provisioner.pyz stage/provisioner.pyz
+
 provisioner:
   name: shell
-  data_path: "../provisioner/dist"
-  root_path: "/tmp/kitchen/"
-  command: "cd /tmp/kitchen/data && chmod u+x bootstrap.sh && ./bootstrap.sh"
+  data_path: "stage/"
+  root_path: "/home/ubuntu/"
+  command: "cd /home/ubuntu/data && sudo python3 provisioner.pyz"
 
 platforms:
   - name: ubuntu-18.04

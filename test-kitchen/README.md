@@ -4,9 +4,7 @@ Use [Test Kitchen](https://kitchen.ci) to run integration tests using AWS EC2 in
 
 > ℹ️ To use this Test Kitchen configuration, you must have access to an AWS account. You must have an AWS IAM API key in `~/.aws/credentials` or another location discoverable by the AWS SDK, and the API Key must be associated with an IAM user that can create VPC resources and EC2 instances. 
 
-> ⚠️ Using Test Kitchen will incur costs on your AWS account when EC2 instances are running. Make sure to shut down unused instances when you're done testing.
-> 
-> `bundle exec kitchen destroy all`
+> 💰 Using Test Kitchen will incur costs on your AWS account when EC2 instances are running.
 
 ## Usage
 
@@ -18,17 +16,16 @@ Set up AWS EC2 environment using Terraform:
 ./configure.sh
 ```
 
-> 🚧️ FIXME: kitchen still doesn't converge properly the first time. Sometimes you need to run it twice. 
-
 Run Test Kitchen using bundler. The preconfigured test suite matches the [sample configuration](../provisioner/dist/server.json).
 
 ```shell
-bundle exec kitchen converge all
-bundle exec kitchen verify all
+bundle exec kitchen test all
 ```
 
 
 ## Clean Up
+
+Shut down unused instances and delete VPC resources when you're done testing.
 
 ```shell
 bundle exec kitchen destroy all
