@@ -9,11 +9,11 @@ import subprocess
 
 from .base import BaseImperator
 
-logger = logging.getLogger("FileCopy")
+logger = logging.getLogger("File")
 
 
-class FileCopy(BaseImperator):
-    resource_type: str = "file_copy"
+class File(BaseImperator):
+    resource_type: str = "file"
 
     def __init__(self, key: str, declaration: Dict):
         super().__init__(key, declaration)
@@ -56,8 +56,8 @@ class FileCopy(BaseImperator):
             self.notify(False)
             return
         elif os.path.isfile(self.key):
-            original_hash = FileCopy.sha_256_sum(self.key)
-            desired_hash = FileCopy.sha_256_sum(self.source)
+            original_hash = File.sha_256_sum(self.key)
+            desired_hash = File.sha_256_sum(self.source)
             # TODO: maybe show a diff? or before/after byte sizes?
             if original_hash == desired_hash:
                 logger.debug("Files are already identical")  # FIXME: Content may be, but what about the metadata?

@@ -21,46 +21,67 @@
           }
         }
       },
-      "file_copy": {
+      "file": {
         "type": "object",
         "patternProperties": {
           ".*": {
             "type": "object",
-            "required": [
-              "source",
-              "owner",
-              "group",
-              "mode"
-            ],
-            "properties": {
-              "source": {
-                "type": "string"
+            "oneOf": [
+              {
+                "required": [
+                  "action"
+                ],
+                "properties": {
+                  "action": {
+                    "const": "delete"
+                  }
+                },
+                "additionalProperties": false
               },
-              "owner": {
-                "type": "string"
-              },
-              "group": {
-                "type": "string"
-              },
-              "mode": {
-                "type": "string"
-              },
-              "action": {
-                "default": "create",
-                "enum": ["create", "delete"]
-              },
-              "conflict": {
-                "default": "backup",
-                "enum": ["abort", "backup", "overwrite"]
+              {
+                "required": [
+                  "action",
+                  "source",
+                  "owner",
+                  "group",
+                  "mode"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string"
+                  },
+                  "owner": {
+                    "type": "string"
+                  },
+                  "group": {
+                    "type": "string"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "pattern": "^[0-7]{3,4}$"
+                  },
+                  "action": {
+                    "const": "create"
+                  },
+                  "conflict": {
+                    "default": "backup",
+                    "enum": [
+                      "abort",
+                      "backup",
+                      "overwrite"
+                    ]
+                  }
+                }
               }
-            }
+            ]
           }
         }
       },
       "observe": {
         "type": "object",
+        "additionalProperties": false,
         "patternProperties": {
-          ".*": {
+          "(package|file)\\[.*\\]": {
             "type": "object",
             "required": [
               "command"

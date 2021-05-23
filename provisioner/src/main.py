@@ -7,7 +7,7 @@ import pkg_resources
 from jsonschema import validate
 
 # TODO: install with apt, or apt-get, or dpkg?
-from imperators import BaseImperator, Package, FileCopy, Observe
+from imperators import BaseImperator, Package, File, Observe
 from logger import logger
 
 
@@ -55,7 +55,7 @@ def main():
 
     BaseImperator.add_listener(listener)
 
-    resource_types = [Package, FileCopy, Observe]
+    resource_types = [Package, File, Observe]
     for stage in data:
         for imperator in resource_types:
             if imperator.resource_type in stage:

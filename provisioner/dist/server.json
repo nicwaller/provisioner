@@ -21,21 +21,19 @@
     }
   },
   {
-    "file_copy": {
+    "file": {
       "/var/www/html/index.html": {
-        "action": "delete",
-        "source": "",
-        "mode": "",
-        "owner": "",
-        "group": ""
+        "action": "delete"
       },
       "/var/www/html/index.php": {
+        "action": "create",
         "source": "index.php",
         "mode": "0444",
         "owner": "root",
         "group": "root"
       },
       "/etc/apache2/sites-available/000-default.conf": {
+        "action": "create",
         "source": "000-default.conf",
         "conflict": "overwrite",
         "mode": "0444",
@@ -44,7 +42,7 @@
       }
     },
     "observe": {
-      "file_copy[/etc/apache2/sites-available/000-default.conf]": {
+      "file[/etc/apache2/sites-available/000-default.conf]": {
         "command": "apache2ctl configtest && (/etc/init.d/apache2 graceful || /etc/init.d/apache2 restart) && date > apache2_restarted"
       }
     }
