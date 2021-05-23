@@ -15,7 +15,7 @@ transport:
 
 provisioner:
   name: shell
-  data_path: "provisioner/dist"
+  data_path: "../provisioner/dist"
   root_path: "/tmp/kitchen/"
   command: "cd /tmp/kitchen/data && chmod u+x bootstrap.sh && ./bootstrap.sh"
 
