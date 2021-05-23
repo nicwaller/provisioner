@@ -1,0 +1,4 @@
+-r prod.txt
+pytest
+black == 21.5b1
+zipapps

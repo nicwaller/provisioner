@@ -10,3 +10,9 @@ ssh_keys/*
 terraform.tfstate*
 id_ed25519*
 id_rsa*
+.pytest_cache
+provisioner/dist/*
+!provisioner/dist/*.json
+venv
+dist
+.DS_Store
