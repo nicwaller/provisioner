@@ -1,14 +1,12 @@
-from __future__ import annotations
-
 import logging
 from typing import Dict, List, Callable
 
 logger = logging.getLogger("BaseImperator")
 
 
-class BaseImperator:
+class BaseImperator(object):
     resource_type: str = "base"
-    changeListeners: List[Callable[[BaseImperator, bool], None]] = []
+    changeListeners: List[Callable[[object, bool], None]] = []
 
     def __init__(self, key: str, declaration: Dict):
         self.key = key
@@ -19,7 +17,7 @@ class BaseImperator:
             listener(self, changed)
 
     @classmethod
-    def apply_multi(cls, items: List[BaseImperator]):
+    def apply_multi(cls, items: List[object]):
         for item in items:
             item.apply()
 
@@ -32,5 +30,5 @@ class BaseImperator:
         raise NotImplemented
 
     @classmethod
-    def add_listener(cls, fn: Callable[[BaseImperator, bool], None]):
+    def add_listener(cls, fn: Callable[[object, bool], None]):
         cls.changeListeners.append(fn)

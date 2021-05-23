@@ -20,6 +20,7 @@ provisioner:
   command: "cd /tmp/kitchen/data && chmod u+x bootstrap.sh && ./bootstrap.sh"
 
 platforms:
+  - name: ubuntu-18.04
   - name: ubuntu-20.04
 
 verifier:
