@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
-bundle install --path vendor/bundle
+set -e
+[ -d vendor ] || bundle install --path vendor/bundle
 
 EXTERNAL_IP=$(curl -s "https://ipv4.icanhazip.com")
 printf "# Managed by configure.sh\nallowed_ip = \"%s\"\n" "${EXTERNAL_IP}" > ./terraform/terraform.tfvars
@@ -8,6 +9,8 @@ printf "# Managed by configure.sh\nallowed_ip = \"%s\"\n" "${EXTERNAL_IP}" > ./t
 # Passphrase intentionally left blank to make it available to Test Kitchen
 [ -f "id_rsa" ] || ssh-keygen -t rsa -f id_rsa -N "" -C "test-kitchen"
 
+(cd terraform; [ -d .terraform ] || terraform init)
+echo "Running terraform apply..."
 (cd terraform; terraform apply)
 
 AWS_SUBNET_ID=$(cd terraform; terraform output -raw test_kitchen_subnet)
