@@ -13,6 +13,5 @@ There are three main pieces in this repository:
 ```shell
 cd test-kitchen
 ./configure.sh
-# Type "yes" to allow Terraform to create VPC resources
 bundle exec kitchen test 1804
 ```

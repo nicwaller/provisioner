@@ -11,7 +11,7 @@ printf "# Managed by configure.sh\nallowed_ip = \"%s\"\n" "${EXTERNAL_IP}" > ./t
 
 (cd terraform; [ -d .terraform ] || terraform init)
 echo "Running terraform apply..."
-(cd terraform; terraform apply)
+(cd terraform; terraform apply -auto-approve)
 
 AWS_SUBNET_ID=$(cd terraform; terraform output -raw test_kitchen_subnet)
 AWS_SECURITY_GROUP_ID=$(cd terraform; terraform output -raw test_kitchen_sg)
