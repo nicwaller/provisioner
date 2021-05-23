@@ -6,45 +6,61 @@
     "type": "object",
     "properties": {
       "package": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "required": [
-            "name",
-            "installed"
-          ],
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "installed": {
-              "type": "boolean"
+        "type": "object",
+        "patternProperties": {
+          ".*": {
+            "type": "object",
+            "required": [
+              "installed"
+            ],
+            "properties": {
+              "installed": {
+                "type": "boolean"
+              }
             }
           }
         }
       },
       "file_copy": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "required": [
-            "destination"
-          ],
-          "properties": {
-            "destination": {
-              "type": "string"
-            },
-            "source": {
-              "type": "string"
-            },
-            "owner": {
-              "type": "string"
-            },
-            "group": {
-              "type": "string"
-            },
-            "mode": {
-              "type": "string"
+        "type": "object",
+        "patternProperties": {
+          ".*": {
+            "type": "object",
+            "required": [
+              "source",
+              "owner",
+              "group",
+              "mode"
+            ],
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "owner": {
+                "type": "string"
+              },
+              "group": {
+                "type": "string"
+              },
+              "mode": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "observe": {
+        "type": "object",
+        "patternProperties": {
+          ".*": {
+            "type": "object",
+            "required": [
+              "command"
+            ],
+            "properties": {
+              "command": {
+                "type": "string"
+              }
             }
           }
         }

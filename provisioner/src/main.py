@@ -1,3 +1,5 @@
+from typing import Set
+
 from logger import logger
 from datetime import datetime
 from os import unlink
@@ -7,12 +9,10 @@ from jsonschema import validate
 import pkg_resources
 
 # TODO: install with apt, or apt-get, or dpkg?
-from imperators.package import Package
-from imperators.file_copy import FileCopy
+from imperators import BaseImperator, Package, FileCopy, Observe
 
 
 def main():
-
     logger.info("starting up")
 
     try:
@@ -45,33 +45,23 @@ def main():
     validate(data, schema)
     # TODO: log better error if schema validation fails
 
+    # changed_resources: Set[str] = set()
+
+    def listener(item: BaseImperator, changed: bool):
+        if changed:
+            Observe.touched_resources.add(f"{item.resource_type}[{item.key}]")
+        else:
+            Observe.untouched_resources.add(f"{item.resource_type}[{item.key}]")
+
+    BaseImperator.add_listener(listener)
+
+    resource_types = [Package, FileCopy, Observe]
     for stage in data:
-        for imperator in [Package, FileCopy]:
-            if imperator.key in stage:
-                packages = [imperator(declaration) for declaration in stage[imperator.key]]
-                imperator.apply(packages)
-        # if 'package' in stage:
-        #     packages = [Package(declaration) for declaration in stage['package']]
-        #     Package.apply(packages)
-        # if 'file_copy' in stage:
-        #     files = [FileCopy(declaration) for declaration in stage['file_copy']]
-        #     FileCopy.apply(files)
-
-    # logger.info("will install apache2")
-    # list_files = subprocess.run(["apt-get", "-y", "install", "apache2", "php"])
-    # print("The exit code was: %d" % list_files.returncode)
-
-    with open("/var/www/html/index.php", "w") as file:
-        # TODO: keep a copy
-        # TODO: compare hashes to identify differences and log info
-        file.truncate(0)
-        file.write(
-            """
-    <?php
-    header("Content-Type: text/plain");
-    echo "Hello, world!\\n";
-    """.lstrip()
-        )
+        for imperator in resource_types:
+            if imperator.resource_type in stage:
+                packages = [imperator(key, declaration) for (key, declaration) in
+                            stage[imperator.resource_type].items()]
+                imperator.apply_multi(packages)
 
 
 if __name__ == "__main__":
@@ -79,4 +69,3 @@ if __name__ == "__main__":
         main()
     finally:
         logger.info("exiting with status code 0")
-
