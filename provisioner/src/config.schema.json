@@ -44,6 +44,10 @@
               },
               "mode": {
                 "type": "string"
+              },
+              "conflict": {
+                "default": "backup",
+                "enum": ["abort", "backup", "overwrite"]
               }
             }
           }

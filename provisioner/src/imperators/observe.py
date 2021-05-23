@@ -21,11 +21,13 @@ class Observe(BaseImperator):
     def apply(self):
         if self.key in Observe.touched_resources:
             logger.info(f"Triggered observer {self.key}")
-            out = subprocess.run(["bash", "-c", self.command])
+            out = subprocess.run(["bash", "-c", self.command], capture_output=True)
             if out.returncode != 0:
                 logger.error(
                     f"Something went wrong while running this observer {self.key}"
                 )
+            else:
+                logger.info(out.stdout.decode("utf-8").strip())
         elif self.key in Observe.untouched_resources:
             logger.debug(f"Skipping observer for {self.key}")
         else:

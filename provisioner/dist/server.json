@@ -19,6 +19,7 @@
       },
       "/etc/apache2/sites-available/000-default.conf": {
         "source": "000-default.conf",
+        "conflict": "backup",
         "mode": "0444",
         "owner": "root",
         "group": "root"
@@ -26,7 +27,10 @@
     },
     "observe": {
       "package[apache2]": {
-        "command": "date > apache2_restarted"
+        "command": "date > apache2_installed"
+      },
+      "file_copy[/etc/apache2/sites-available/000-default.conf]": {
+        "command": "/etc/init.d/apache2 graceful && date > apache2_restarted"
       }
     }
   }

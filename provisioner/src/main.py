@@ -64,10 +64,4 @@ def main():
                     for (key, declaration) in stage[imperator.resource_type].items()
                 ]
                 imperator.apply_multi(packages)
-
-
-if __name__ == "__main__":
-    try:
-        main()
-    finally:
-        logger.info("exiting with status code 0")
+    logger.info("Done")  # TODO: log the time spent, and maybe update metrics
