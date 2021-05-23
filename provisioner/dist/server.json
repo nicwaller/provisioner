@@ -19,7 +19,7 @@
       },
       "/etc/apache2/sites-available/000-default.conf": {
         "source": "000-default.conf",
-        "conflict": "backup",
+        "conflict": "overwrite",
         "mode": "0444",
         "owner": "root",
         "group": "root"
@@ -30,7 +30,7 @@
         "command": "date > apache2_installed"
       },
       "file_copy[/etc/apache2/sites-available/000-default.conf]": {
-        "command": "/etc/init.d/apache2 graceful && date > apache2_restarted"
+        "command": "apache2ctl configtest && (/etc/init.d/apache2 graceful || /etc/init.d/apache2 restart) && date > apache2_restarted"
       }
     }
   }

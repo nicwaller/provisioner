@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import subprocess
+import sys
 from typing import Dict, Set
 
 from .base import BaseImperator
@@ -26,6 +27,9 @@ class Observe(BaseImperator):
                 logger.error(
                     f"Something went wrong while running this observer {self.key}"
                 )
+                print(out.stdout)
+                print(out.stderr, file=sys.stderr)
+                # Being able to roll back a notifier resource would be interesting, but too much work
             else:
                 logger.info(out.stdout.decode("utf-8").strip())
         elif self.key in Observe.untouched_resources:

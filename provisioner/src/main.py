@@ -65,3 +65,5 @@ def main():
                 ]
                 imperator.apply_multi(packages)
     logger.info("Done")  # TODO: log the time spent, and maybe update metrics
+
+    # TODO: emit a final status (did everything converge as expected? all the services running?)
