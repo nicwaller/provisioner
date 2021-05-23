@@ -51,10 +51,12 @@
                     "type": "string"
                   },
                   "owner": {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^[0-9abcdefghijklmnopqrstuvwxyz0-9_-]{1,31}$"
                   },
                   "group": {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^[0-9abcdefghijklmnopqrstuvwxyz0-9_-]{1,31}$"
                   },
                   "mode": {
                     "type": "string",
