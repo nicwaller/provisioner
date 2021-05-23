@@ -1,0 +1,33 @@
+[
+  {
+    "package": {
+      "apache2": {
+        "installed": true
+      },
+      "php": {
+        "installed": true
+      }
+    }
+  },
+  {
+    "file_copy": {
+      "/var/www/html/index.php": {
+        "source": "index.php",
+        "mode": "0444",
+        "owner": "root",
+        "group": "root"
+      },
+      "/etc/apache2/sites-available/000-default.conf": {
+        "source": "000-default.conf",
+        "mode": "0444",
+        "owner": "root",
+        "group": "root"
+      }
+    },
+    "observe": {
+      "package[apache2]": {
+        "command": "date > apache2_restarted"
+      }
+    }
+  }
+]

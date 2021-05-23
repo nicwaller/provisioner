@@ -11,8 +11,6 @@ terraform.tfstate*
 id_ed25519*
 id_rsa*
 .pytest_cache
-provisioner/dist/*
-!provisioner/dist/*.json
+provisioner/dist/*.pyz
 venv
-dist
 .DS_Store
