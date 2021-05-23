@@ -1,7 +1,10 @@
 .PHONY: build
 build: dist/provisioner.pyz
 
-dist/provisioner.pyz: venv src
+dist:
+	mkdir -p dist
+
+dist/provisioner.pyz: venv src dist
 	./venv/bin/python3 -m zipapp src -o dist/provisioner.pyz -m main:main
 
 venv: requirements/dev.txt

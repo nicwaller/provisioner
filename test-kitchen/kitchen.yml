@@ -20,11 +20,10 @@ lifecycle:
         sudo apt-get -y install ruby
   pre_converge:
     - local: |
-        set -x
-        mkdir stage
-        cd ../provisioner
-        rm -f dist/provisioner.pyz
-        make dist/provisioner.pyz && cp ../provisioner/dist/provisioner.pyz stage/provisioner.pyz
+        set -xe
+        mkdir -p stage
+        (cd ../provisioner && rm -f dist/provisioner.pyz && make dist/provisioner.pyz)
+        cp ../provisioner/dist/provisioner.pyz stage/provisioner.pyz
 
 provisioner:
   name: shell
