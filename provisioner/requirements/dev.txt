@@ -1,4 +1,4 @@
 -r prod.txt
-pytest
+pytest == 6.2.4
 black == 21.5b1
-zipapps
+zipapps == 2021.4.29
