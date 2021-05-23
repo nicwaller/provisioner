@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import Dict, List
-import subprocess
 import logging
+import subprocess
+from typing import Dict
 
 from .base import BaseImperator
 

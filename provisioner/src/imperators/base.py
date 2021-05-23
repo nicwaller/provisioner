@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict, List, Callable
 import logging
+from typing import Dict, List, Callable
 
 logger = logging.getLogger("BaseImperator")
 
