@@ -3,8 +3,7 @@ from __future__ import annotations
 from typing import Dict, List, Callable
 import logging
 
-logger = logging.getLogger('BaseImperator')
-
+logger = logging.getLogger("BaseImperator")
 
 
 class BaseImperator:

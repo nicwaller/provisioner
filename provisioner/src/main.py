@@ -1,15 +1,14 @@
-from typing import Set
-
-from logger import logger
-from datetime import datetime
-from os import unlink
 import errno
 import json
-from jsonschema import validate
+from datetime import datetime
+from os import unlink
+
 import pkg_resources
+from jsonschema import validate
 
 # TODO: install with apt, or apt-get, or dpkg?
 from imperators import BaseImperator, Package, FileCopy, Observe
+from logger import logger
 
 
 def main():
@@ -17,7 +16,7 @@ def main():
 
     try:
         with open("/root/provisioner", "w") as file:
-            file.write(datetime.today().strftime('%Y-%m-%d'))
+            file.write(datetime.today().strftime("%Y-%m-%d"))
         unlink("/root/provisioner")
     except IOError as e:
         if e.errno == errno.ENOENT:
@@ -32,7 +31,7 @@ def main():
             # print(e)
 
     # TODO: URL? env var?
-    with open('server.json', 'r') as file:
+    with open("server.json", "r") as file:
         data = json.load(file)
 
     # how to handle parent directories of files? least permission with traverse?
@@ -41,8 +40,9 @@ def main():
 
     # TODO: CLI to print out the current schema, or validate files against the built-in schema
 
-    schema = json.loads(pkg_resources.resource_string(__name__, 'config.schema.json'))
+    schema = json.loads(pkg_resources.resource_string(__name__, "config.schema.json"))
     validate(data, schema)
+
     # TODO: log better error if schema validation fails
 
     # changed_resources: Set[str] = set()
@@ -59,8 +59,10 @@ def main():
     for stage in data:
         for imperator in resource_types:
             if imperator.resource_type in stage:
-                packages = [imperator(key, declaration) for (key, declaration) in
-                            stage[imperator.resource_type].items()]
+                packages = [
+                    imperator(key, declaration)
+                    for (key, declaration) in stage[imperator.resource_type].items()
+                ]
                 imperator.apply_multi(packages)
 
 

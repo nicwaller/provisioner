@@ -6,7 +6,7 @@ import logging
 
 from .base import BaseImperator
 
-logger = logging.getLogger('Package')
+logger = logging.getLogger("Package")
 
 
 class Package(BaseImperator):
@@ -14,7 +14,7 @@ class Package(BaseImperator):
 
     def __init__(self, key: str, declaration: Dict):
         super().__init__(key, declaration)
-        self.installed: bool = declaration['installed']
+        self.installed: bool = declaration["installed"]
 
     def apply(self):
         if Package.is_installed(self.key):
@@ -28,12 +28,14 @@ class Package(BaseImperator):
             apt_verb = "remove"
         out = subprocess.run(["apt-get", "-y", apt_verb, self.key])
         if out.returncode != 0:
-            logger.error('Something went wrong while manipulating packages')
+            logger.error("Something went wrong while manipulating packages")
         self.notify(True)
 
     @staticmethod
     def is_installed(name: str) -> bool:
-        return (subprocess.run(["dpkg", "-l", name], stdout=subprocess.DEVNULL)).returncode == 0
+        return (
+            subprocess.run(["dpkg", "-l", name], stdout=subprocess.DEVNULL)
+        ).returncode == 0
 
     # PERF: we could use apply_multi() to install several packages at once, but the feedback is more complex
     # @classmethod

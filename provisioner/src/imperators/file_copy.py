@@ -11,7 +11,7 @@ import logging
 
 from .base import BaseImperator
 
-logger = logging.getLogger('FileCopy')
+logger = logging.getLogger("FileCopy")
 
 
 class FileCopy(BaseImperator):
@@ -19,10 +19,10 @@ class FileCopy(BaseImperator):
 
     def __init__(self, key: str, declaration: Dict):
         super().__init__(key, declaration)
-        self.source: str = declaration['source']
-        self.mode: str = declaration['mode']
-        self.owner: str = declaration['owner']
-        self.group: str = declaration['group']
+        self.source: str = declaration["source"]
+        self.mode: str = declaration["mode"]
+        self.owner: str = declaration["owner"]
+        self.group: str = declaration["group"]
 
     def apply(self):
         # Be careful about avoiding temporary race conditions... use hard linking to move into place? Does move preserve permissions?

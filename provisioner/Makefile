@@ -9,8 +9,8 @@ venv: requirements/dev.txt
 	venv/bin/pip3 install -r requirements/dev.txt
 
 .PHONY: black
-black: venv *.py
-	venv/bin/black *.py
+black: venv
+	venv/bin/black .
 
 .PHONY: test
 test: venv src/__tests__
