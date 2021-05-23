@@ -1,6 +1,9 @@
 [
   {
     "package": {
+      "ftp": {
+        "installed": false
+      },
       "apache2": {
         "installed": true
       },

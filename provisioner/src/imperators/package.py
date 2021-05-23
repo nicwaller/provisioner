@@ -17,14 +17,18 @@ class Package(BaseImperator):
         self.installed: bool = declaration["installed"]
 
     def apply(self):
-        if Package.is_installed(self.key):
-            logger.debug(f"Package {self.key} is already installed")
-            self.notify(False)
-            return
 
         if self.installed:
+            if Package.is_installed(self.key):
+                logger.debug(f"Package {self.key} is already installed")
+                self.notify(False)
+                return
             apt_verb = "install"
         else:
+            if not Package.is_installed(self.key):
+                logger.debug(f"Package {self.key} is already removed")
+                self.notify(False)
+                return
             apt_verb = "remove"
         out = subprocess.run(["apt-get", "-y", apt_verb, self.key])
         if out.returncode != 0:
