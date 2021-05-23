@@ -38,7 +38,7 @@ class Package(BaseImperator):
     @staticmethod
     def is_installed(name: str) -> bool:
         return (
-            subprocess.run(["dpkg", "-l", name], stdout=subprocess.DEVNULL)
+            subprocess.run(["dpkg", "-l", name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         ).returncode == 0
 
     # PERF: we could use apply_multi() to install several packages at once, but the feedback is more complex
