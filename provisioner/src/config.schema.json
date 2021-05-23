@@ -45,6 +45,10 @@
               "mode": {
                 "type": "string"
               },
+              "action": {
+                "default": "create",
+                "enum": ["create", "delete"]
+              },
               "conflict": {
                 "default": "backup",
                 "enum": ["abort", "backup", "overwrite"]

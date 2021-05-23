@@ -27,13 +27,27 @@ class FileCopy(BaseImperator):
             self.conflict: str = declaration["conflict"]
         except KeyError:
             self.conflict: str = "backup"
+        try:
+            self.action: str = declaration["action"]
+        except KeyError:
+            self.action: str = "create"
+        # TODO: I need a way to delete index.html so that index.php can shine through
 
     def apply(self):
         # Be careful about avoiding temporary race conditions... use hard linking to move into place? Does move preserve permissions?
         # Yes, moving a file does preserve mode, etc. that will work.
         # How to support large file copies?
 
-        # TODO: make sure the source exists
+        if self.action == "delete":
+            try:
+                os.unlink(self.key)
+                logger.info(f"Deleted file {self.key}")
+                # TODO: maybe backup here too
+                self.notify(True)
+            except FileNotFoundError:
+                logger.debug(f"No file to delete at {self.key}")
+                self.notify(False)
+            return
 
         if os.path.isdir(self.key):
             logger.warning(f"Desired file ${self.key} already exists as directory")
