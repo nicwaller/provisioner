@@ -58,6 +58,17 @@ Resources should be updated atomically, when possible, even if that makes the op
 
 A `file` resource has metadata attributes like owner, group, and mode that could be updated in-place in a series of steps. However, an interruption in the series of steps could potentially render a file unusable until the next run. For example, consider a file `index.php` owned by `alice:alice` and having file mode `0777`. The file is used by `www-data`. The operator wants to secure the file by changing the mode to `0640`; in order to for the file to remain readable by the webserver it's also necessary to update the owner to `alice:www-data`. A crash between the first and second operation would render the file unreadable until next time the configuration is applied. This operation can be made atomic by preparing a temporary file in a staging area _in the same filesystem_ with appropriate data and metadata, then moving it into place (ie. by using [rename()](https://man7.org/linux/man-pages/man2/rename.2.html)). The most reliable way to ensure the staging file is in the same filesystem is to create the staging file in the same directory as the target file. However, this introduces a new risk for processes that scan the contents of the directory and don't expect duplicate files (eg. apache sites-available); therefore it should be possible to change this behaviour on a per-resource basis.
 
+## Distinct plan/apply phases
+
+Having a `--dry-run` option is highly desirable for a tool that may perform dangerous operations like file replacement or deletion. It's also critical that the dry run behaviour reflects the final executed behaviour as accurately as possible. If dry-run is implemented with a separate code path, or as a flag during the apply phase, it's likely to drift and/or cases will be missed. Therefore, the code that applies changes should depend on outputs from the planning phase (much like Terraform). The stages would probably look like this:
+
+1. Construct a list of "shadow" resource states as described by the configuration file.
+2. Gather a list of "current" resource states by inspecting the environment.
+3. Reconcile each current resource against its shadow to produce a list of 0..many actions.
+4. Write the intended actions to a journal.
+5a. If `--dry-run`, output the actions.
+5b. If `--wet-run`, apply each action and output the results. Update the journal after completion of each action.
+
 ## Twelve-Factor App
 
 I've attempted to embrace the design philosophy of the [twelve-factor app](https://12factor.net).
