@@ -11,7 +11,8 @@ There are three main pieces in this repository:
 # Quick Start
 
 ```shell
-cd test-kitchen
+git clone git@github.com:nicwaller/provisioner.git
+cd provisioner/test-kitchen
 ./configure.sh
 bundle exec kitchen test 1804
 ```
