@@ -34,7 +34,8 @@ class Package(BaseImperator):
             logger.info(f"[dryrun] would run command: {' '.join(command)}")
             self.notify(True)
         else:
-            out = subprocess.run(command)
+            logger.info(f"Will install package: {self.key}")
+            out = subprocess.run(command, stdout=subprocess.DEVNULL)
             if out.returncode != 0:
                 logger.error("Something went wrong while manipulating packages")
             self.notify(True)
@@ -43,7 +44,7 @@ class Package(BaseImperator):
     def is_installed(name: str) -> bool:
         try:
             output = subprocess.check_output(["dpkg", "-l", name]).decode("utf-8")
-            return re.search(f"^ii\s*{name}", output) is not None
+            return re.search(f"ii\s*{name}", output) is not None
         except subprocess.CalledProcessError:
             # no matching packages
             return False
