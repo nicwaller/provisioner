@@ -94,9 +94,7 @@ class File(BaseImperator):
     @staticmethod
     def sha_256_sum(path: str) -> str:
         # FIXME: capture stdout the hard way :(
-        proc = subprocess.run(["shasum", "-a256", path])
-        # return proc.stdout.decode("utf-8").split(" ")[0]
-        return ""
+        return subprocess.check_output(["shasum", "-a256", path]).decode("utf-8").split(" ")[0]
 
     #     ubuntu@ip-10-193-71-185:/tmp/kitchen/data$ shasum -a256 apache2_restarted | awk '{print $1}'
     # 961198931557c09f72eb92e8acbee0dd279d4858be322a7ebb7b31564d8e3f5b

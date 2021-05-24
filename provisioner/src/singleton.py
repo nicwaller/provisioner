@@ -29,7 +29,7 @@ class Singleton(object):
             with open(self.pidfile, 'w') as file:
                 file.write(str(os.getpid()))
                 logger.debug("Wrote pidfile.")
-            logger.info("No conflicting processes found.")
+            logger.debug("No conflicting processes found.")
 
     # noinspection PyShadowingBuiltins
     def __exit__(self, _, value, traceback):
