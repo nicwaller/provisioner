@@ -63,15 +63,21 @@ class File(BaseImperator):
             desired_hash = File.sha_256_sum(self.source)
             # TODO: maybe show a diff? or before/after byte sizes?
             if original_hash == desired_hash:
-                logger.debug("Files are already identical")  # FIXME: Content may be, but what about the metadata?
+                logger.debug(
+                    "Files are already identical"
+                )  # FIXME: Content may be, but what about the metadata?
                 self.notify(False)
             else:
                 if self.conflict == "abort":
-                    logger.warning(f"Aborting change to ${self.key} due to specified conflict behaviour")
+                    logger.warning(
+                        f"Aborting change to ${self.key} due to specified conflict behaviour"
+                    )
                     self.notify(False)
                     return
                 elif self.conflict == "backup":
-                    raise NotImplementedError("FileCopy conflict behaviour: backup")  # TODO: do this
+                    raise NotImplementedError(
+                        "FileCopy conflict behaviour: backup"
+                    )  # TODO: do this
                 elif self.conflict == "overwrite":
                     if dryrun:
                         logger.info("[dryrun] skipping overwrite")
@@ -94,7 +100,11 @@ class File(BaseImperator):
     @staticmethod
     def sha_256_sum(path: str) -> str:
         # FIXME: capture stdout the hard way :(
-        return subprocess.check_output(["shasum", "-a256", path]).decode("utf-8").split(" ")[0]
+        return (
+            subprocess.check_output(["shasum", "-a256", path])
+            .decode("utf-8")
+            .split(" ")[0]
+        )
 
     #     ubuntu@ip-10-193-71-185:/tmp/kitchen/data$ shasum -a256 apache2_restarted | awk '{print $1}'
     # 961198931557c09f72eb92e8acbee0dd279d4858be322a7ebb7b31564d8e3f5b

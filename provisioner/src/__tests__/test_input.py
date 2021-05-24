@@ -19,7 +19,10 @@ def test_schema_failure():
 
 
 def test_parse_package():
-    steps = cast(List[Package], parse('[{"package":{"apache2":{"installed":true},"php":{"installed":true}}}]'))
+    steps = cast(
+        List[Package],
+        parse('[{"package":{"apache2":{"installed":true},"php":{"installed":true}}}]'),
+    )
     assert len(steps) == 2
     assert steps[0].key == "apache2"
     assert steps[0].installed == True

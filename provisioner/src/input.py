@@ -30,10 +30,12 @@ def parse(userdata: str) -> List[BaseImperator]:
     for stage in data:
         for imperator in resource_types:
             if imperator.resource_type in stage:
-                all_items.extend([
-                    imperator(key, declaration)
-                    for (key, declaration) in stage[imperator.resource_type].items()
-                ])
+                all_items.extend(
+                    [
+                        imperator(key, declaration)
+                        for (key, declaration) in stage[imperator.resource_type].items()
+                    ]
+                )
     return all_items
 
 

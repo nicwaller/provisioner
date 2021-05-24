@@ -17,10 +17,12 @@ from singleton import Singleton
 def main():
     pass
 
+
 # dry run
 
+
 @click.command(help="Apply configuration on this server and exit")
-@click.option('--dry-run', is_flag=True)
+@click.option("--dry-run", is_flag=True)
 def run(dry_run: bool):
     check_root()
     with Singleton():
@@ -28,7 +30,14 @@ def run(dry_run: bool):
 
 
 @click.command(help="Run as a daemon, periodically re-applying the configuration")
-@click.option('-i', '--interval', default=1800, help="Delay (in seconds) between runs", show_default=True, envvar='INTERVAL')
+@click.option(
+    "-i",
+    "--interval",
+    default=1800,
+    help="Delay (in seconds) between runs",
+    show_default=True,
+    envvar="INTERVAL",
+)
 def daemon(interval: int):
     check_root()
     with Singleton():
@@ -37,7 +46,6 @@ def daemon(interval: int):
             logger.info(f"Sleeping for {interval} seconds")
             time.sleep(interval)
             logger.info("Waking up")
-
 
 
 @click.command(help="Display JSON schema for configuration")
@@ -81,11 +89,10 @@ def check_root():
 
 def perform(dryrun=False):
     steps: List[BaseImperator] = []
-    with open(os.getenv('CONFIG_FILE', 'server.json'), "r") as file:
+    with open(os.getenv("CONFIG_FILE", "server.json"), "r") as file:
         steps.extend(parse(file.read()))
 
     # how to handle parent directories of files? least permission with traverse?
-
 
     # TODO: CLI to print out the current schema, or validate files against the built-in schema
 
@@ -95,7 +102,5 @@ def perform(dryrun=False):
 
     for step in steps:
         step.apply(dryrun=False)
-
-
 
     # TODO: emit a final status (did everything converge as expected? all the services running?)
