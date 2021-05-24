@@ -3,3 +3,4 @@
 *.pyz
 venv
 .DS_Store
+build
