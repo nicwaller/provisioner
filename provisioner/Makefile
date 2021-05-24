@@ -5,7 +5,10 @@ dist:
 	mkdir -p dist
 
 dist/provisioner.pyz: venv src dist
-	./venv/bin/python3 -m zipapp src -o dist/provisioner.pyz -m main:main
+	mkdir -p build
+	venv/bin/pip3 install -r requirements/prod.txt --target build
+	cp -r src/* build/
+	./venv/bin/python3 -m zipapp build -o dist/provisioner.pyz
 
 venv: requirements/dev.txt
 	[ -d venv ] || python3 -m venv venv && venv/bin/pip3 install --upgrade pip
