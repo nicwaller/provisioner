@@ -1,9 +1,6 @@
 [
   {
     "package": {
-      "ftp": {
-        "installed": false
-      },
       "apache2": {
         "installed": true
       },
@@ -14,9 +11,6 @@
     "observe": {
       "package[apache2]": {
         "command": "date > apache2_installed"
-      },
-      "package[ftp]": {
-        "command": "wall Reminder to all students: insecure FTP is forbidden."
       }
     }
   },
