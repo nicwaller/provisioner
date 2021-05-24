@@ -29,7 +29,7 @@ def run(dry_run: bool):
 
 
 @click.command(help="Run as a daemon, periodically re-applying the configuration")
-@click.option('-i', '--interval', default=1800, help="Delay (in seconds) between runs", show_default=True)
+@click.option('-i', '--interval', default=1800, help="Delay (in seconds) between runs", show_default=True, envvar='INTERVAL')
 def daemon(interval: int):
     check_root()
     with Singleton():
@@ -64,6 +64,9 @@ def check_root():
         with open("/root/provisioner", "w") as file:
             file.write(datetime.today().strftime("%Y-%m-%d"))
         unlink("/root/provisioner")
+    except PermissionError:
+        logger.error("probably not running as root user")
+        raise RuntimeError("this program must be run as root") from None
     except IOError as e:
         if e.errno == errno.ENOENT:
             # /root doesn't exist? probably not on Linux.
@@ -74,7 +77,7 @@ def check_root():
             logger.error("probably not running as root user")
             raise RuntimeError("this program must be run as root") from None
         else:
-            pass
+            raise NotImplementedError()
 
 
 def perform(dryrun=False):
