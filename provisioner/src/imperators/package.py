@@ -1,4 +1,5 @@
 import logging
+import re
 import subprocess
 from typing import Dict
 
@@ -40,10 +41,10 @@ class Package(BaseImperator):
 
     @staticmethod
     def is_installed(name: str) -> bool:
-        return (
-            subprocess.run(
-                ["dpkg", "-l", name],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        ).returncode == 0
+        try:
+            output = subprocess.check_output(["dpkg", "-l", name]).decode("utf-8")
+            return re.search(f"^ii\s*{name}", output) is not None
+        except subprocess.CalledProcessError:
+            # no matching packages
+            return False
+
