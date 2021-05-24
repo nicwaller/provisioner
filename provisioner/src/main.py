@@ -100,7 +100,10 @@ def perform(dryrun=False):
     # noinspection PyTypeChecker
     BaseImperator.add_listener(Observe.change_listener)
 
+    start_time = time.time()
     for step in steps:
         step.apply(dryrun=False)
+    end_time = time.time()
+    logger.info(f"Complete after {round(end_time - start_time, 1)} seconds.")
 
     # TODO: emit a final status (did everything converge as expected? all the services running?)
