@@ -3,9 +3,9 @@ import logging
 import os
 import pwd
 import shutil
+import subprocess
 import tempfile
 from typing import Dict
-import subprocess
 
 from .base import BaseImperator
 

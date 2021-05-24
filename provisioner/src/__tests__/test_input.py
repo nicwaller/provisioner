@@ -3,8 +3,8 @@ from typing import List, cast
 
 import pytest
 from jsonschema.exceptions import ValidationError
-
 from provisioner.src.core.input import parse
+
 from provisioner.src.imperators.package import Package
 
 

@@ -1,6 +1,5 @@
 import logging
 import subprocess
-import sys
 from typing import Dict, Set
 
 from .base import BaseImperator

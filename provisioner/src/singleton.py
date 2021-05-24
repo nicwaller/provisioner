@@ -4,8 +4,6 @@ So let's try to be sure we're the only one around.
 """
 import logging
 import os
-import sys
-import time
 
 logger = logging.getLogger("Singleton")
 

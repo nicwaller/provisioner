@@ -1,16 +1,15 @@
 import errno
 import os
 import time
-
-import click
 from datetime import datetime
 from os import unlink
 from typing import List
 
+import click
 
 from imperators import BaseImperator, Observe
-from logger import logger
 from input import parse, print_schema
+from logger import logger
 from singleton import Singleton
 
 

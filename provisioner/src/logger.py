@@ -1,7 +1,7 @@
-from datetime import datetime
 import logging
 import os
 import sys
+from datetime import datetime
 
 # FORMAT = '%(asctime)-15s %(clientip)s %(user)-8s %(message)s'
 # logging.basicConfig(format=FORMAT)
