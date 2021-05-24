@@ -35,3 +35,7 @@ def parse(userdata: str) -> List[BaseImperator]:
                     for (key, declaration) in stage[imperator.resource_type].items()
                 ])
     return all_items
+
+
+def print_schema() -> None:
+    print(json.dumps(schema, indent=2))

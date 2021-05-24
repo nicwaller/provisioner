@@ -28,12 +28,18 @@ class File(BaseImperator):
             except KeyError:
                 self.conflict: str = "backup"
 
-    def apply(self):
+    def apply(self, dryrun=False):
         # Be careful about avoiding temporary race conditions... use hard linking to move into place? Does move preserve permissions?
         # Yes, moving a file does preserve mode, etc. that will work.
         # How to support large file copies?
 
         if self.action == "delete":
+            # the Pythonic way is EAFP (easier to ask forgiveness)
+            # rather than LBYL (look before you leap)
+            # to avoid TOCTOU errors https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use
+            # but that doesn't work very well for a dry run :(
+            if dryrun:
+                logger.warning("Skipping deletions in dry run")
             try:
                 os.unlink(self.key)
                 logger.info(f"Deleted file {self.key}")
@@ -67,6 +73,8 @@ class File(BaseImperator):
                 elif self.conflict == "backup":
                     raise NotImplementedError("FileCopy conflict behaviour: backup")  # TODO: do this
                 elif self.conflict == "overwrite":
+                    if dryrun:
+                        logger.info("[dryrun] skipping overwrite")
                     self.copy_into_place()
                     self.notify(True)
                 else:

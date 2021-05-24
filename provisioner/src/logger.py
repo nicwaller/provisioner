@@ -22,7 +22,6 @@ class CustomJsonFormatter(jsonlogger.JsonFormatter):
 rootLogger = logging.getLogger()
 rootLogger.setLevel(logging.INFO)
 
-print(os.getenv('LOG', 'plain'))
 if os.getenv('LOG', 'plain') == 'JSON':
     jsonHandler = logging.StreamHandler()
     jsonHandler.setFormatter(CustomJsonFormatter('%(timestamp)s %(level)s %(name)s %(message)s'))

@@ -14,7 +14,7 @@ class Package(BaseImperator):
         super().__init__(key, declaration)
         self.installed: bool = declaration["installed"]
 
-    def apply(self):
+    def apply(self, dryrun=False):
 
         if self.installed:
             if Package.is_installed(self.key):
@@ -28,10 +28,15 @@ class Package(BaseImperator):
                 self.notify(False)
                 return
             apt_verb = "remove"
-        out = subprocess.run(["apt-get", "-y", apt_verb, self.key])
-        if out.returncode != 0:
-            logger.error("Something went wrong while manipulating packages")
-        self.notify(True)
+        command = ["apt-get", "-y", apt_verb, self.key]
+        if dryrun:
+            logger.info(f"[dryrun] would run command: {' '.join(command)}")
+            self.notify(True)
+        else:
+            out = subprocess.run(command)
+            if out.returncode != 0:
+                logger.error("Something went wrong while manipulating packages")
+            self.notify(True)
 
     @staticmethod
     def is_installed(name: str) -> bool:

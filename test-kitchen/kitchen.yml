@@ -29,7 +29,7 @@ provisioner:
   name: shell
   data_path: "stage/"
   root_path: "/home/ubuntu/"
-  command: "cd /home/ubuntu/data && sudo python3 provisioner.pyz"
+  command: "cd /home/ubuntu/data && sudo python3 provisioner.pyz run"
 
 platforms:
   - name: ubuntu-18.04

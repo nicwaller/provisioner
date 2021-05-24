@@ -1,5 +1,8 @@
 import errno
 import os
+import time
+
+import click
 from datetime import datetime
 from os import unlink
 from typing import List
@@ -7,14 +10,53 @@ from typing import List
 
 from imperators import BaseImperator, Observe
 from logger import logger
-from input import parse
+from input import parse, print_schema
 from singleton import Singleton
 
 
+@click.group()
 def main():
+    pass
+
+# dry run
+
+@click.command(help="Apply configuration on this server and exit")
+@click.option('--dry-run', is_flag=True)
+def run(dry_run: bool):
     check_root()
     with Singleton():
-        run()
+        perform(dry_run)
+
+
+@click.command(help="Run as a daemon, periodically re-applying the configuration")
+@click.option('-i', '--interval', default=1800, help="Delay (in seconds) between runs", show_default=True)
+def daemon(interval: int):
+    check_root()
+    with Singleton():
+        while True:
+            perform(False)
+            logger.info(f"Sleeping for {interval} seconds")
+            time.sleep(interval)
+            logger.info("Waking up")
+
+
+
+@click.command(help="Display JSON schema for configuration")
+def schema():
+    print_schema()
+
+
+main.add_command(run)
+main.add_command(schema)
+main.add_command(daemon)
+
+
+# @click.command()
+# @click.option("-s", "--schema")
+# def main(schema):
+#     if schema:
+#         return
+#
 
 
 def check_root():
@@ -35,7 +77,7 @@ def check_root():
             pass
 
 
-def run():
+def perform(dryrun=False):
     steps: List[BaseImperator] = []
     with open(os.getenv('CONFIG_FILE', 'server.json'), "r") as file:
         steps.extend(parse(file.read()))
@@ -50,7 +92,7 @@ def run():
     BaseImperator.add_listener(Observe.change_listener)
 
     for step in steps:
-        step.apply()
+        step.apply(dryrun=False)
 
 
 

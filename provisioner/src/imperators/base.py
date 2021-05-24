@@ -19,13 +19,13 @@ class BaseImperator(object):
     @classmethod
     def apply_multi(cls, items: List[object]):
         for item in items:
-            item.apply()
+            item.apply(False)
 
     """
     Implementors should call self.notify() from this method
     """
 
-    def apply(self):
+    def apply(self, dryrun=False):
         self.notify(False)
         raise NotImplemented
 

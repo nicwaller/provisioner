@@ -17,9 +17,12 @@ class Observe(BaseImperator):
         super().__init__(key, declaration)
         self.command: str = declaration["command"]
 
-    def apply(self):
+    def apply(self, dryrun=False):
         if self.key in Observe.touched_resources:
             logger.info(f"Triggered observer {self.key}")
+            if dryrun:
+                logger.info("[dryrun] skipping observer command")
+                return
             # FIXME: capture output the hard way, because capture_output is available in 3.7 but we have 3.6.9 :(
             out = subprocess.run(["bash", "-c", self.command])
             # out = subprocess.run(["bash", "-c", self.command], capture_output=True)
