@@ -2,6 +2,8 @@
 
 A simple tool for configuring Debian Linux servers, much like [Puppet](https://puppet.com), [Chef](https://www.chef.io), and [Ansible](https://www.ansible.com).
 
+![run demonstration](doc/images/run-demo.gif)
+
 ## Usage
 
 Download the latest release of `provisioner.pyz` [from GitHub](https://github.com/nicwaller/provisioner/releases) onto your server.
