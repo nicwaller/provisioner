@@ -40,6 +40,12 @@ describe file('/var/www/html/index.php') do
   it { should_not be_allowed('write', by_user: 'httpd') }
 end
 
+describe http('http://localhost', method: 'GET', ssl_verify: false, max_redirects: 0) do
+  its('status') { should eq 200 }
+  its('body') { should eq 'Hello, world!' }
+  its('headers.Content-Type') { should cmp 'text/plain;charset=UTF-8' }
+end
+
 describe command('curl -s -o /dev/null --write-out "%{http_code}" http://localhost') do
   its('stdout') { should eq "200" }
   its('stderr') { should eq '' }
