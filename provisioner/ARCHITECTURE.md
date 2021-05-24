@@ -69,6 +69,8 @@ Having a `--dry-run` option is highly desirable for a tool that may perform dang
 5a. If `--dry-run`, output the actions.
 5b. If `--wet-run`, apply each action and output the results. Update the journal after completion of each action.
 
+Partially inspired by https://www.gresearch.co.uk/article/in-praise-of-dry-run/
+
 ## Twelve-Factor App
 
 I've attempted to embrace the design philosophy of the [twelve-factor app](https://12factor.net).
