@@ -2,112 +2,72 @@
 
 A simple tool for configuring Debian Linux servers, much like [Puppet](https://puppet.com), [Chef](https://www.chef.io), and [Ansible](https://www.ansible.com).
 
-A python app
+## Usage
 
-with minimal dependencies.
+Download the latest release of `provisioner.pyz` [from GitHub](https://github.com/nicwaller/provisioner/releases) onto your server.
 
-Building with Makefile
+Make sure you've [authored](#authoring) a `server.json` file first and placed it in the same directory.
 
-Installation
+You can run the provisioner once, or set it up as a long-lived daemon that runs periodically. If you're practicing [immutable infrastructure](https://www.hashicorp.com/resources/what-is-mutable-vs-immutable-infrastructure) then you'll probably run the provisioner once to prepare an AMI, or as a Cloud-Init process as your EC2 instance is starting up. If you have long-lived, mutable servers you'll probably want to run the provisioner in daemon mode, with the process supervisor of your choice (eg. systemd or runit). 
 
-pyz zipapp file
-An artifact is just a file. Is GitHub release enough? Or go to S3?
+The provisioner must run as root user.
 
-Usage and syntax, link to schema
-- immediate vs long-lived
-- command line options? emit schema? validate? dry run/preview/plan?
+```shell
+sudo python3 provisioner.pyz --help          # Show usage instructions
+sudo python3 provisioner.pyz run             # Once
+sudo python3 provisioner.pyz run --dry-run   # Once, as a dry run (no changes)
+sudo python3 provisioner.pyz daemon -i 3600  # Periodically
+```
+
+Human-readable logs are written to /dev/stdout. If you're collecting log events into a central system, you'll want to enable JSON logging mode with the `LOGS="JSON"` environment variable.
+
+Only one provisioner can run at a time; the provisioner will exit if it detects another one is already running. The pidfile is saved to `/var/run/provisioner.pid`.
+
+## Authoring
+
+Look at the documentation pages for [resources](doc/resources).
+
+For the best possible authoring experience, use an editor that supports JSON schema, such as VS Code or JetBrains IDEA. Always get the JSON schema for the version you're running:
+
+```shell
+python3 provisioner.pyz schema
+```
+
+## Building
+
+`make dist/provisioner.pyz`
+
+This produces a self-contained Python [zipapp](https://docs.python.org/3/library/zipapp.html) that can easily be copied onto a server.
+
+## Testing
+
+
+
 - how to invoke configuration
-- assumed paths
-- where do files come from?
-- how to get it onto your server? (scp? sftp put? userdata? ansible?)
-Possibke to be loaded as a long running supervised service that starts on reboot, but I won't actually do that part.
-What happens if the config takes a long time? Would it run into the next schedule run?
-  what about thundering herd? randomized delay? back pressure from web server?
-  
-immutable infrastructure = yes? single short-lived run
-immutable infrastructure = no? long-lived maintainer
 
 where to find backups if your files get overwritten
 
 sensitive values and keys
 
-run as root
-
-Observabiilty and logging and metrics - stdout
-- how to change logging from plain to structured events
-
 piping to stdin? multiple files? (build process is responsible for concatenating)
 
-PHASES/STAGES and RESOURCE PRECEDENCE
 
 ## Per-Resource documentation
 
 Auromatically create parent directories by default? With what mode? Only traverse? Same mode as file? Secure by default, fail fast design. 
 
-## Safety 
-How to be safe about running more than one at a time? Re-entrant and race safe?
 
-TODO: obtain a lock when doing a configuration run
+## Testing
 
-where is the lock file?
+There are a few unit tests written with Pytest. ⚠️ However, they don't work right now because of module import conflicts related to the use of zipapp.
 
-## Testing (unit)
-
-TODO: write some unit tests
-
-if you want integration tests, go look at Test Kitchen
-
-getting set up nicely for editing with JSON schema
+Instead, go run integration tests with [Test Kitchen](../test-kitchen).
 
 ## compatibility
-Only Debian (no RHEL or macOS). Ubuntu 18.04 tested.
 
-Ubuntu 18.04 and 20.04 validated
-I want features from Python 3.7 and 3.10 though :(, but missing in 18.04
+Only compatible with Debian-based Linux systems with Python 3.6 or higher. Ubuntu 18.04 and 20.04 are both confirmed working.
 
-TODO: mark places in code that require specific versions, or could benefit from Python upgrades, PY_VER: 3.10
-
-## Future Plans
-
-fetch config from a URL
-specifies as env var
-Because i always thought it would be cool
-And we can rely on extensive HTTP cache infra
-REPL or arg or stdin pipe or read from URL
-leave curl for that???
+It does **not** work on macOS.
 
 
-Should allow verifying cryptographic hashes for integrity. Computing at scale is fraught.
-
-detect availability of dpkg/apt/yum/apk and behave accordingly
-
-configurable with env:
-emit metrics for statsd
-prometheus metrics exporter
-HTTP health check if long-lived (or command-line based...?)
-
-SIGHUP to reload config and apply again
-
-Short lived single run, or long lived process with polling the config endpoint, to maintain state over time.
-
-Observer patterns, so you can send webhooks or whatever without needing to observe each named resource.
-
-- Tokenizer/parser to show where is error in config file
-
-Providing the hash allows for computing whether the file should be downloaded again. Otherwise look for an Etag.
-
-
-But if I'm not doing ordering because of JSON schema limitations...
-and I'm not doing graph resolution... :(
-maybe split it up into stages? that's kinda gross.
-Maybe going from stages back to total order would be okay, if I can figure out JSON schema
-
-
-I had trouble getting module loading to work for pytest, and zipapp, and PyCharm
-
-## Out of scope
-
-JSON5, because I like to allow comments in JSON. But that could also be part of the surrounding tooling, it doesn't need to be here.
-
-And JSON5 doesn't play that nice with JSON schema.
 
