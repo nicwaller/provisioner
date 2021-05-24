@@ -103,8 +103,11 @@ maybe split it up into stages? that's kinda gross.
 Maybe going from stages back to total order would be okay, if I can figure out JSON schema
 
 
+I had trouble getting module loading to work for pytest, and zipapp, and PyCharm
+
 ## Out of scope
 
 JSON5, because I like to allow comments in JSON. But that could also be part of the surrounding tooling, it doesn't need to be here.
 
 And JSON5 doesn't play that nice with JSON schema.
+

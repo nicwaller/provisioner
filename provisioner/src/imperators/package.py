@@ -38,20 +38,3 @@ class Package(BaseImperator):
         return (
             subprocess.run(["dpkg", "-l", name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         ).returncode == 0
-
-    # PERF: we could use apply_multi() to install several packages at once, but the feedback is more complex
-    # @classmethod
-    # def apply_multi(cls, items: List[Package]):
-    #     # Want to detect what changes we made? could parse `apt -qq list apache2 foo php`
-    #     for x in items:
-    #         x.notify(True)  # FIXME: only notify when installed
-    #     installable = [x.key for x in items if x.installed]
-    #     removable = [x.key for x in items if not x.installed]
-    #     if len(installable) > 0:
-    #         out = subprocess.run(["apt-get", "-y", "install", *installable])
-    #         if out.returncode != 0:
-    #             logger.error('Something went wrong while installing packages')
-    #     if len(removable) > 0:
-    #         out = subprocess.run(["apt-get", "-y", "remove", *removable])
-    #         if out.returncode != 0:
-    #             logger.error('Something went wrong while removing packages')

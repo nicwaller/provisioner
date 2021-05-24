@@ -108,3 +108,6 @@ class File(BaseImperator):
         os.rename(tmpFilePath, self.key)
         logger.info(f"Created {self.key}")
         self.notify(True)
+
+
+# FIXME: remember to take backups of files

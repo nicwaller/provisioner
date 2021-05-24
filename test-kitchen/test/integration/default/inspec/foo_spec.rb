@@ -40,7 +40,6 @@ describe file('/var/www/html/index.php') do
   it { should_not be_allowed('write', by_user: 'httpd') }
 end
 
-# TODO: This actually needs to pass with the public IP address, not just localhost
 describe command('curl -s -o /dev/null --write-out "%{http_code}" http://localhost') do
   its('stdout') { should eq "200" }
   its('stderr') { should eq '' }

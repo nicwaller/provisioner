@@ -29,6 +29,7 @@ class BaseImperator(object):
         self.notify(False)
         raise NotImplemented
 
+    # TODO: With Python >= 3.10 and __future__, type annotation can reference containing class
     @classmethod
     def add_listener(cls, fn: Callable[[object, bool], None]):
         cls.changeListeners.append(fn)

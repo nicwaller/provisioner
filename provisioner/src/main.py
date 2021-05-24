@@ -1,19 +1,23 @@
 import errno
-import json
+import os
 from datetime import datetime
 from os import unlink
+from typing import List
 
-import pkg_resources
-from jsonschema import validate
 
-# TODO: install with apt, or apt-get, or dpkg?
-from imperators import BaseImperator, Package, File, Observe
+from imperators import BaseImperator, Observe
 from logger import logger
+from input import parse
+from singleton import Singleton
 
 
 def main():
-    logger.info("starting up")
+    check_root()
+    with Singleton():
+        run()
 
+
+def check_root():
     try:
         with open("/root/provisioner", "w") as file:
             file.write(datetime.today().strftime("%Y-%m-%d"))
@@ -22,48 +26,32 @@ def main():
         if e.errno == errno.ENOENT:
             # /root doesn't exist? probably not on Linux.
             logger.critical("/root does not exist")
-            logger.info("This tool only works on Linux. Are you on a Mac?")
-            return
+            logger.warning("This tool only works on Linux. Are you on a Mac?")
+            raise RuntimeError("This cannot be run on a Mac") from None
         elif e.errno == errno.EPERM:
             logger.error("probably not running as root user")
+            raise RuntimeError("this program must be run as root") from None
         else:
             pass
-            # print(e)
 
-    # TODO: URL? env var?
-    with open("server.json", "r") as file:
-        data = json.load(file)
+
+def run():
+    steps: List[BaseImperator] = []
+    with open(os.getenv('CONFIG_FILE', 'server.json'), "r") as file:
+        steps.extend(parse(file.read()))
 
     # how to handle parent directories of files? least permission with traverse?
 
-    # remember to take backups of files
 
     # TODO: CLI to print out the current schema, or validate files against the built-in schema
 
-    schema = json.loads(pkg_resources.resource_string(__name__, "config.schema.json"))
-    validate(data, schema)
+    # Python's type checker can't quite handle this until >= 3.10
+    # noinspection PyTypeChecker
+    BaseImperator.add_listener(Observe.change_listener)
 
-    # TODO: log better error if schema validation fails
+    for step in steps:
+        step.apply()
 
-    # changed_resources: Set[str] = set()
 
-    def listener(item: BaseImperator, changed: bool):
-        if changed:
-            Observe.touched_resources.add(f"{item.resource_type}[{item.key}]")
-        else:
-            Observe.untouched_resources.add(f"{item.resource_type}[{item.key}]")
-
-    BaseImperator.add_listener(listener)
-
-    resource_types = [Package, File, Observe]
-    for stage in data:
-        for imperator in resource_types:
-            if imperator.resource_type in stage:
-                packages = [
-                    imperator(key, declaration)
-                    for (key, declaration) in stage[imperator.resource_type].items()
-                ]
-                imperator.apply_multi(packages)
-    logger.info("Done")  # TODO: log the time spent, and maybe update metrics
 
     # TODO: emit a final status (did everything converge as expected? all the services running?)

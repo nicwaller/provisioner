@@ -38,5 +38,13 @@ class Observe(BaseImperator):
         else:
             logger.warning(f"No matched resource for observer on {self.key}")
 
+    @classmethod
+    def change_listener(cls, item: BaseImperator, changed: bool):
+        if changed:
+            cls.touched_resources.add(f"{item.resource_type}[{item.key}]")
+        else:
+            cls.untouched_resources.add(f"{item.resource_type}[{item.key}]")
+
+
 # What if the command hangs? Shall we time out? Or just avoid arbitrary commands for this reason.
 # It should definitely emit warning messages if commands take longer than expected.
