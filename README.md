@@ -5,7 +5,7 @@ A simple tool for configuring Debian Linux servers, much like [Puppet](https://p
 There are three main pieces in this repository:
 
 1. The [provisioner](provisioner/) tool itself, written in Python.
-2. A sample [config file](provisioner/dist/server.json) (JSON) to demonstrate usage.
+2. A sample [config file](test-kitchen/stage/server.json) (JSON) to demonstrate usage.
 3. [Integration tests](test-kitchen/) using Test Kitchen and Inspec.
 
 # Quick Start
